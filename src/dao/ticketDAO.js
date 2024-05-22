@@ -12,6 +12,7 @@ export default class TicketMongoDAO {
                 throw new Error('Cart not found');
             }
 
+            //? aca se guardan los _Ids de los productos que no contaban con suficiente stock
             let failedProducts = [];
 
             for (const item of cart.products) {
