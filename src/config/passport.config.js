@@ -25,7 +25,7 @@ export const init = () => {
 
     const email = profile._json.email
 
-    // console.log('email es: ',email)
+    console.log('email es: ',email)
 
     let user = await UserModel.findOne({ email })
     if (user) {

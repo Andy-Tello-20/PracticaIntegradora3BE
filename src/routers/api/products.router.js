@@ -10,12 +10,12 @@ const router = Router()
 router.get('/products', ProductsController.getProducts
    )
 
- router.post('/products', passport.authenticate('current', { session: false, failureRedirect: '/login' }) ,authRolesMiddleware ,ProductsController.createProduct)
+ router.post('/products', passport.authenticate('current', { session: false, failureRedirect: '/login' }) ,authRolesMiddleware('admin') ,ProductsController.createProduct)
 
  router.get('/products/:sid', ProductsController.getProductById)
 
- router.put('/products/:uid', passport.authenticate('current', { session: false, failureRedirect: '/login' }) ,authRolesMiddleware ,ProductsController.UpdateProduct)
+ router.put('/products/:uid', passport.authenticate('current', { session: false, failureRedirect: '/login' }) ,authRolesMiddleware('admin') ,ProductsController.UpdateProduct)
 
- router.post('/product/:uid', passport.authenticate('current', { session: false, failureRedirect: '/login' }) ,authRolesMiddleware ,ProductsController.deleteProduct)
+ router.post('/product/:uid', passport.authenticate('current', { session: false, failureRedirect: '/login' }) ,authRolesMiddleware('admin') ,ProductsController.deleteProduct)
 
 export default router

@@ -1,6 +1,6 @@
 <article class="pico-background-violet-100">
   <header class="pico-background-violet-100">
-    <h1 >Te damos la bienvenida <span class="pico-color-indigo-600"> {{user.first_name}}</span> 😁
+    <h1>Te damos la bienvenida <span class="pico-color-indigo-600"> {{user.first_name}}</span> 😁
     </h1>
   </header>
 
@@ -8,6 +8,9 @@
   <p><strong>Apellido:</strong> {{user.last_name}}</p>
   <p><strong>Correo:</strong> {{user.email}}</p>
   <p><strong>Edad:</strong> {{user.age}}</p>
+  <p><strong>carrito:</strong> {{user.cart}}</p>
+
+
   <footer>
     <a href="/api/session/logout" role="button">Salir</a>
   </footer>
@@ -19,7 +22,7 @@
   <article class="pico-background-violet-100">
     <h3>Borrar producto</h3>
 
-    <form action='api/product/:uid' method='POST' class="form-delete">
+    <form id="deleteForm" action='api/product/:uid' method='POST' class="form-delete">
 
       <label for="ID">ID:</label>
       <input type="number" name="deleteId" required>
@@ -29,28 +32,7 @@
 
   </article>
 
-  <script>
-document.getElementById('deleteForm').addEventListener('submit', function(event) {
-    event.preventDefault();  // Prevenir el envío estándar del formulario
-    const deleteId = document.getElementById('deleteId').value;
-    const actionUrl = `/api/product/${deleteId}`;
 
-    fetch(actionUrl, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    })
-    .then(response => response.json())
-    .then(data => {
-        // Maneja la respuesta del servidor
-        console.log(data);
-    })
-    .catch(error => {
-        console.error('Error:', error);
-    });
-});
-</script>
 
 </div>
 
@@ -106,7 +88,7 @@ document.getElementById('deleteForm').addEventListener('submit', function(event)
   </div>
 
   <div class="contenedor-items">
-  {{#each listProducts}}
+    {{#each listProducts}}
     <div class="contenedor-producto">
       <span>Nro:{{id}}</span>
       <h2>{{title}}</h2>
@@ -115,11 +97,83 @@ document.getElementById('deleteForm').addEventListener('submit', function(event)
       <span>{{thumbnail}}</span>
       <p>{{code}}</p>
       <p>{{stock}}</p>
-      
+
       <!-- Botón "Agregar al carrito" con atributo data-idProducto -->
-      <button class="btn-agregar-carrito" data-idProducto="{{id}}">Agregar</button>
+      <button class="btn-agregar-carrito" data-cartId="{{../cartId}}" data-idProducto="{{_id}}">Agregar</button>
     </div>
-  {{/each}}
-</div>
+    {{/each}}
+  </div>
 
 </div>
+
+<script>
+
+
+    document.getElementById('deleteForm').addEventListener('submit', function (event) {
+      event.preventDefault();  // Prevenir el envío estándar del formulario
+      const deleteId = document.getElementById('deleteId').value;
+      const actionUrl = `/api/product/${deleteId}`;
+
+      fetch(actionUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+        .then(response => response.json())
+        .then(data => {
+          // Maneja la respuesta del servidor
+          console.log(data);
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
+    });
+
+
+
+  document.addEventListener('DOMContentLoaded', () => {
+    // Selecciona todos los botones con la clase .btn-agregar-carrito
+    const botonesAgregarCarrito = document.querySelectorAll('.btn-agregar-carrito');
+
+    console.log(' botonesAgregarCarrito es: ',botonesAgregarCarrito)
+
+    // Agrega un manejador de eventos a cada botón
+    botonesAgregarCarrito.forEach((button) => {
+      button.addEventListener('click', async (event) => {
+        // Evitar el comportamiento por defecto del botón
+        event.preventDefault();
+
+        const cartId = button.getAttribute('data-cartId');
+        console.log(' capture  cartId es: ',cartId)
+        const productId = button.getAttribute('data-idProducto');
+        console.log(' capture  productId es: ',productId)
+        const url = `api/carts/${cartId}/product/${productId}`;
+
+        console.log('url es ', url)
+
+        try {
+          const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          });
+
+          if (!response.ok) {
+            throw new Error('Error al agregar el producto al carrito');
+          }
+
+
+          window.location.href = '/profile'; 
+
+          const data = await response.json();
+          console.log('Producto agregado al carrito:', data);
+
+        } catch (error) {
+          console.error('Error:', error);
+        }
+      });
+    });
+  });
+</script>

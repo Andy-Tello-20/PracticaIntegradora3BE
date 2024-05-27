@@ -39,6 +39,10 @@ static register =  async (req, res, next) => {
     try {
   
       const { first_name, last_name, email, password, age } = req.body;
+
+      const {cartId} = req.body
+      
+      console.log('cartId es por ahora: ', cartId)
   
   
   
@@ -53,14 +57,16 @@ static register =  async (req, res, next) => {
       if (findEmail) {
         return res.status(409).json({ error: 'Ya existe un usuario con el correo en el sistema.' });
       }
-  
+    
+
       const newUserRegister = {
         first_name,
         last_name,
         email,
         age,
         password: createHash(password),
-        role: "user"
+        role: "user",
+        cart: `${cartId}`
       }
       const newUser = await SessionMongoDAO.createUser(newUserRegister);
   

@@ -16,4 +16,9 @@ router.get('/register', (req, res) => {
 router.get('/recovery-password', (req, res) => {
   res.status(200).render('recovery-password', { title: 'recovery-password' })
 })
+
+router.get('/createCart', (req,res) =>{
+res.status(200).render('createCart', { title: 'crear carrito' })
+} 
+)
 export default router

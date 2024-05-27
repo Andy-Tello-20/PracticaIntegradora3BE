@@ -4,6 +4,9 @@ export default class CartMongoDAO {
 
     static async createCart(data) {
         const product = await CartModel.create(data);
+
+       
+
         console.log(`Producto creado correctamente (${product._id}) `);
         return product;
     }

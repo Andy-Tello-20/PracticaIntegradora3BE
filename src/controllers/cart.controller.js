@@ -1,4 +1,3 @@
-
 import {cartService}  from "../services/CartServices.js";
 
 export default class CartsController {
@@ -12,9 +11,9 @@ export default class CartsController {
                 products: []
             }
 
-            await cartService.create(newCart)
+            const response = await cartService.create(newCart)
 
-            res.status(201).json(newCart)
+            res.status(201).json(response)
 
         } catch (error) {
             console.error(error)
@@ -57,6 +56,8 @@ export default class CartsController {
         try {
             const carritoId = req.params.cid
             const productoId = req.params.pid
+
+            console.log('carritoId y productoId son: ', carritoId, productoId)
     
             const productoEncontrado = await cartService.addProduct(carritoId,productoId)
     

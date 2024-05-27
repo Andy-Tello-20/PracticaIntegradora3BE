@@ -23,6 +23,7 @@ export const generateToken = (user) => {
     role: user.role,
     email: user.email,
     age:user.age,
+    cart:user.cart
   };
   return JWT.sign(payload, jwt_secret, { expiresIn: '10m' });
 };
